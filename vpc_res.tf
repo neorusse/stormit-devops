@@ -41,7 +41,7 @@ resource "aws_subnet" "stormit_public" {
   tags = {
     "Name"                          = "StormIT Public Subnet ${count.index + 1}"
     "kubernetes.io/role/elb"        = "1"
-    "kubernetes.io/cluster/stormit" = "owned"
+    "kubernetes.io/cluster/stormit" = "shared"
   }
 }
 
@@ -55,8 +55,8 @@ resource "aws_subnet" "stormit_private" {
 
   tags = {
     "Name"                          = "StormIT Privte Subnet ${count.index + 1}"
-    "kubernetes.io/role/elb"        = "1"
-    "kubernetes.io/cluster/stormit" = "owned"
+    "kubernetes.io/role/internal-elb"        = "1"
+    "kubernetes.io/cluster/stormit" = "shared"
   }
 }
 
