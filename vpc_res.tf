@@ -9,7 +9,9 @@ variable "private_subnet_cidrs" {}
 ################################################################################
 
 resource "aws_vpc" "stormit" {
-  cidr_block  = var.vpc_config.cidr_block
+  cidr_block            = var.vpc_config.cidr_block
+  enable_dns_support    = true
+  enable_dns_hostnames  = true
   tags = { 
     Name = var.vpc_config.tag
   }
@@ -43,6 +45,8 @@ resource "aws_subnet" "stormit_public" {
     "kubernetes.io/role/elb"        = "1"
     "kubernetes.io/cluster/stormit" = "shared"
   }
+
+  depends_on = [aws_vpc.stormit]
 }
 
 # Private subnet
@@ -58,6 +62,8 @@ resource "aws_subnet" "stormit_private" {
     "kubernetes.io/role/internal-elb"        = "1"
     "kubernetes.io/cluster/stormit" = "shared"
   }
+
+  depends_on = [aws_vpc.stormit]
 }
 
 ################################################################################
