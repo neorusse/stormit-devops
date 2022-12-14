@@ -1,3 +1,5 @@
+# NB: xxxxxxx, and *-xxxxxx is a place holder, replace with actual value.
+
 vpc_config = {
   cidr_block  = "10.0.0.0/16"
   tag         = "stormit"
@@ -40,4 +42,12 @@ wordpress = {
   labels                    = {
     app = "stormit"
   }
+}
+
+client_vpn = {
+  name                = "stormit-vpn"
+  server_cert_arn     = "xxxxxxxx"
+  client_cert_arn     = "xxxxxxxx"
+  client_cidr         = "10.0.1.0/22"
+  private_subnet_ids  = ["subnet-xxx", "subnet-xxx", "subnet-xxx"]
 }

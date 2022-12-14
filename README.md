@@ -31,7 +31,32 @@ These services were deployed to eu-central-1 Frankfurt Region and they spans thr
 ### Aurora Multi-AZ RDS DB Cluster
 Deployed as Multi-AZ. A Multi-AZ DB cluster deployment is a high availability deployment mode of Amazon RDS with two readable standby DB instances. A Multi-AZ DB cluster has a writer DB instance and two reader DB instances in three separate Availability Zones in the same AWS Region.
 
+### AWS Client VPN
+Client VPN uses certificates to perform authentication between the client and the server. 
+In-order to setup Client VPN, we will have to generate some certs, and import them into the certificate manager in AWS.
+To generate these certs, [Easy-RSA](https://github.com/OpenVPN/easy-rsa) was used.
+
+In this case, I generated the following files:
+```
+CA: ca.crt
+Client-cert: stormit.client.crt
+Client-key: stormit.client.key
+Server-cert: stormit.server.crt
+Server-key: stormit.server.key
+```
+
+To generate the certs as seen above, consult the [Easy-RSA](https://github.com/OpenVPN/easy-rsa) [documentation](https://github.com/OpenVPN/easy-rsa/blob/master/README.quickstart.md) 
+There is a pretty [Easy-RSA good guide](https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/client-authentication.html#mutual) here by AWS.
+
+#### Upload the server certificate and key and the client certificate and key to AWS Certificate Manager ACM.
+`aws acm import-certificate --certificate fileb://stormit.server.crt --private-key fileb://stormit.server.crt --certificate-chain fileb://ca.crt`
+
+`aws acm import-certificate --certificate fileb://stormit.client.crt --private-key fileb://stormit.client.key --certificate-chain fileb://ca.crt`
+
 ### How to Provision the AWS Services
+
+#### terraform.tfvars file
+NB: in the terraform.tfvars file, xxxxxxx, and *-xxxxxx is a place holder. Replace with actual value.
 
 #### Configure AWS S3 bucket as Terraform backend
 1. Create an S3 Bucket
@@ -88,10 +113,19 @@ Deployed as Multi-AZ. A Multi-AZ DB cluster deployment is a high availability de
    ```
    terraform plan
    ```
+   To display the plan of specific resource, you can target just that resource using:
+
+   ```
+   terraform plan -target=aws_vpc.stormit
+   ```
 3. After review the output of `terraform plan` and everything look good. Provision the resources by running:
    ```
    terraform apply
    ```
+   To create specific resource, you can target just that resource using:
+
+   ```
+   terraform apply -target=aws_vpc.stormit
 
 ### Possible Improvements
 * Re-structure the repository so we can use same Terraform code with different variable files for multi-environment setup.
