@@ -94,7 +94,7 @@ Deployed as Multi-AZ. A Multi-AZ DB cluster deployment is a high availability de
    ```
 
 ### Possible Improvements
-* Re-structure the repository so we can use same Terraform code for with different variable files for multi-environment setup.
+* Re-structure the repository so we can use same Terraform code with different variable files for multi-environment setup.
 * Use Terraform Modules for Code Management.
 * Use Yaml manifest and Helm in place of Terraform to package and deploy the Wordpress application.
 
