@@ -9,7 +9,7 @@ variable "client_vpn" {}
 
 resource "aws_security_group" "vpn_access" {
   name = "${var.client_vpn.name}-sg"
-  vpc_id = aws_vpc.main.id
+  vpc_id = var.vpc_id
   
   ingress {
     from_port = 443

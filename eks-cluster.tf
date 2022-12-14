@@ -1,5 +1,13 @@
 variable "eks_cluster" {}
 
+variable "vpc_id" {}
+
+variable "public_subnet_ids" {}
+
+variable "private_subnet_ids" {}
+
+variable "azs" {}
+
 data "aws_eks_cluster" "cluster" {
   name = aws_eks_cluster.stormit_eks.id
 }
@@ -55,7 +63,7 @@ resource "aws_eks_cluster" "stormit_eks" {
   role_arn = aws_iam_role.stormit_eks.arn
 
   vpc_config {
-    subnet_ids = concat(var.eks_cluster.public_subnet_ids, var.eks_cluster.private_subnet_ids)
+    subnet_ids = concat(var.public_subnet_ids, var.private_subnet_ids)
   }
 
   tags = {
@@ -118,7 +126,7 @@ resource "aws_eks_fargate_profile" "stormit_eks" {
   cluster_name           = var.eks_cluster.name
   fargate_profile_name   = var.eks_cluster.fargate_name
   pod_execution_role_arn = aws_iam_role.fargate_pod_execution_role.arn
-  subnet_ids             = var.eks_cluster.private_subnet_ids
+  subnet_ids             = var.private_subnet_ids
 
   selector {
     namespace = var.eks_cluster.name

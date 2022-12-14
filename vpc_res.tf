@@ -58,9 +58,9 @@ resource "aws_subnet" "stormit_private" {
   map_public_ip_on_launch   = false
 
   tags = {
-    "Name"                          = "StormIT Privte Subnet ${count.index + 1}"
-    "kubernetes.io/role/internal-elb"        = "1"
-    "kubernetes.io/cluster/stormit" = "shared"
+    "Name"                            = "StormIT Privte Subnet ${count.index + 1}"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/stormit"   = "shared"
   }
 
   depends_on = [aws_vpc.stormit]
