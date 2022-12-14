@@ -134,3 +134,19 @@ resource "aws_route_table_association" "stormit_private" {
   subnet_id      = element(aws_subnet.stormit_private[*].id, count.index)
   route_table_id = aws_route_table.stormit_private.id
 }
+
+########################
+## Output
+########################
+
+output "aws_subnets_public" {
+  value   = aws_subnet.stormit_public.*.id
+}
+
+output "aws_subnets_private" {
+  value   = aws_subnet.stormit_private.*.id
+}
+
+output "vpc_id" {
+  value  = aws_vpc.stormit.id
+}
