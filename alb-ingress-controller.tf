@@ -122,8 +122,8 @@ resource "kubernetes_deployment" "ingress" {
 
           secret {
             secret_name = kubernetes_service_account.ingress.default_secret_name
-           }
-         }
+          }
+        }
       }
     }
   }
