@@ -127,6 +127,12 @@ NB: in the terraform.tfvars file, xxxxxxx, and *-xxxxxx is a place holder. Repla
    ```
    terraform apply -target=aws_vpc.stormit
 
+4. Delete the provisioned AWS resource
+   ```
+   terraform destroy
+   ```
+
+Visit the AWS Management Console to view the services created.
 ### Possible Improvements
 * Re-structure the repository so we can use same Terraform code with different variable files for multi-environment setup.
 * Use Terraform Modules for Code Management.
