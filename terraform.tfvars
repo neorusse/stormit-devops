@@ -18,7 +18,7 @@ private_subnet_ids    = ["subnet-xxx", "subnet-xxx", "subnet-xxx"]
 
 eks_cluster = {
   name                  = "stormit"
-  version               = "1.22"
+  version               = "1.21"
   fargate_name          = "stormit-fargate"
 }
 

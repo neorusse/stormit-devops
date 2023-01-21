@@ -6,24 +6,6 @@ variable "public_subnet_ids" {}
 
 variable "private_subnet_ids" {}
 
-variable "azs" {}
-
-data "aws_eks_cluster" "cluster" {
-  name = aws_eks_cluster.stormit_eks.id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = aws_eks_cluster.stormit_eks.id
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
-  version                = "~> 1.10"
-}
-
 ################################################################################
 # EKS Cluster
 ################################################################################
@@ -58,9 +40,10 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
 }
 
 resource "aws_eks_cluster" "stormit_eks" {
-  name     = var.eks_cluster.name
+  name                      = var.eks_cluster.name
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  role_arn = aws_iam_role.stormit_eks.arn
+  role_arn                  = aws_iam_role.stormit_eks.arn
+  version                   = var.eks_cluster.version
 
   vpc_config {
     subnet_ids = concat(var.public_subnet_ids, var.private_subnet_ids)
@@ -132,8 +115,26 @@ resource "aws_eks_fargate_profile" "stormit_eks" {
     namespace = var.eks_cluster.name
   }
 
+  selector {
+    namespace = "kube-system"
+  }
+
   timeouts {
     create   = "30m"
     delete   = "30m"
   }
+
+  depends_on = [aws_eks_cluster.stormit_eks]
+}
+
+########################
+## Output
+########################
+
+output "cluster_id" {
+value  = aws_eks_cluster.stormit_eks.id
+}
+
+output "cluster_name" {
+  value = aws_eks_cluster.stormit_eks.name
 }
