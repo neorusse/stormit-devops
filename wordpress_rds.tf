@@ -31,7 +31,7 @@ resource "aws_rds_cluster" "aurora_cluster" {
   cluster_identifier        = "${var.wordpress.name}-db-subnet"
   engine                    = var.wordpress.db_engine
   engine_version            = var.wordpress.db_engine_version
-  availability_zones        = var.wordpress.azs
+  availability_zones        = var.azs
   db_cluster_instance_class = var.wordpress.db_cluster_instance_class
   allocated_storage         = var.wordpress.db_storage
   storage_type              = var.wordpress.db_storage_type
@@ -51,14 +51,14 @@ resource "aws_rds_cluster" "aurora_cluster" {
 resource "aws_rds_cluster_instance" "aurora_cluster_instance" {
   count                  = length(var.private_subnet_cidrs)
 
-  identifier             = "${var.wordpress.name}_aurora_instance_${count.index}"
+  identifier             = "${var.wordpress.name}-aurora-instance-${count.index}"
   cluster_identifier     = aws_rds_cluster.aurora_cluster.id
   instance_class         = var.wordpress.db_instance_class
   engine                 = aws_rds_cluster.aurora_cluster.engine
   engine_version         = aws_rds_cluster.aurora_cluster.engine_version
   db_subnet_group_name   = aws_db_subnet_group.aurora_subnet_group.name
 
-  tags {
+  tags = {
     Name         = "${var.wordpress.name}_aurora_instance_${count.index}"
     ManagedBy    = "terraform"
   }
@@ -68,7 +68,7 @@ resource "aws_db_subnet_group" "aurora_subnet_group" {
   name          = "${var.wordpress.name}_aurora_db_subnet_group"
   description   = "Allowed subnets for Aurora DB cluster instances"
   subnet_ids    = var.private_subnet_cidrs
-  tags {
+  tags = {
       Name         = "${var.wordpress.name}-Aurora-DB-Subnet-Group"
       ManagedBy    = "terraform"
   }
@@ -79,5 +79,5 @@ resource "aws_db_subnet_group" "aurora_subnet_group" {
 ########################
 
 output "cluster_address" {
-    value = "${aws_rds_cluster.aurora_cluster.address}"
+    value = "${aws_rds_cluster.aurora_cluster.endpoint}"
 }

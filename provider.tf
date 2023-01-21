@@ -13,12 +13,12 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "stormit-tf-backend"
-    key    = "terraform/terraform.tfstate"
-    region = "eu-central-1"
-    dynamodb_table = "stormit-tf-statelock"
-  }
+  # backend "s3" {
+  #   bucket = "stormit-tf-backend"
+  #   key    = "terraform/terraform.tfstate"
+  #   region = "eu-central-1"
+  #   dynamodb_table = "stormit-tf-statelock"
+  # }
 }
 
 # Configure the AWS Provider
